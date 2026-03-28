@@ -159,3 +159,12 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+keda:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  pollingInterval: 15
+  cooldownPeriod: 300
+  threshold: 2
