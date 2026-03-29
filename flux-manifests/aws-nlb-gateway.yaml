@@ -11,6 +11,10 @@ spec:
         type: LoadBalancer
         annotations:
           service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+  telemetry:
+    metrics:
+      prometheus:
+        disable: false
           
 ---
 
