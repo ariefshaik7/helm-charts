@@ -23,6 +23,6 @@ spec:
       metricName: http_requests_per_minute
       threshold: {{ quote .Values.keda.threshold }}
       
-      # Dynamically targets the Ingress created by this chart
-      query: sum(rate(nginx_ingress_controller_requests{ingress="{{ include "go-web-app.fullname" . }}"}[1m])) * 60
-{{- end }}
+#       query: sum(rate(nginx_ingress_controller_requests{ingress="{{ include "go-web-app.fullname" . }}"}[1m])) * 60
+        query: sum(rate(envoy_http_downstream_rq_total{envoy_http_conn_manager_prefix="ingress_http"}[1m])) * 60
+ {{- end }}
