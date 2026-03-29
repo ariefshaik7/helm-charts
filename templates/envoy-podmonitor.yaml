@@ -7,12 +7,12 @@ metadata:
     release: kube-prometheus-stack 
 spec:
   namespaceSelector:
-    any: true
+    matchNames:
+    - envoy-gateway-system
   selector:
     matchLabels:
       app.kubernetes.io/component: proxy
   podMetricsEndpoints:
   - path: /stats/prometheus
-    port: metrics-port
-    targetPort: 19001
+    port: metrics
     interval: 15s
