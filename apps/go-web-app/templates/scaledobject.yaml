@@ -1,4 +1,4 @@
-{{- if and .Values.httpRoute.enabled .Values.keda.enabled -}}
+{{- if and .Values.ingress.enabled .Values.keda.enabled -}}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
