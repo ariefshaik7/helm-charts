@@ -64,7 +64,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: nginx.go-app.local
+    - host: keda-go-app.local
       paths:
         - path: /
           pathType: ImplementationSpecific
