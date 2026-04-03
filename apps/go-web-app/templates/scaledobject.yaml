@@ -1,4 +1,4 @@
-{{- if and .Values.ingress.enabled .Values.keda.enabled -}}
+{{- if and (or .Values.ingress.enabled .Values.httpRoute.enabled) .Values.keda.enabled -}}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
@@ -15,12 +15,24 @@ spec:
   cooldownPeriod: {{ .Values.keda.cooldownPeriod }}
   
   triggers:
-
+  # TRIGGER 1: Watch the NGINX Traffic
+  {{- if .Values.ingress.enabled }}
   - type: prometheus
     metadata:
       serverAddress: http://kube-prometheus-stack-prometheus.kube-prometheus-stack.svc.cluster.local:9090
-      metricName: http_requests_per_minute
+      metricName: nginx_requests
       threshold: {{ quote .Values.keda.threshold }}
       query: sum(rate(nginx_ingress_controller_requests{ingress="{{ include "go-web-app.fullname" . }}"}[1m])) * 60
-      # query: sum(rate(envoy_http_downstream_rq_total[1m])) * 60
+  {{- end }}
+
+  # TRIGGER 2: Watch the Envoy Gateway Traffic
+  {{- if .Values.httpRoute.enabled }}
+  - type: prometheus
+    metadata:
+      serverAddress: http://kube-prometheus-stack-prometheus.kube-prometheus-stack.svc.cluster.local:9090
+      metricName: envoy_requests
+      threshold: {{ quote .Values.keda.threshold }}
+      # Note: Make sure Envoy is exporting this metric into Prometheus!
+      query: sum(rate(envoy_http_downstream_rq_total[1m])) * 60
+  {{- end }}
 {{- end }}
